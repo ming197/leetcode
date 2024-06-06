@@ -12,6 +12,7 @@ public:
     bool isHappy(int n) {
         unordered_set<int> seen;
         // if n is not 1 and it is not in the set
+        // use set to judge if it is a cycle
         while (n != 1 && seen.find(n) == seen.end())
         {
             seen.insert(n);
