@@ -37,6 +37,7 @@ public:
         // if any linked list is not empty, loop through it
         ListNode* l3 = l1 ? l1 : l2;
         // loop through the remaining linked list when one of the linked list is not empty or x > 0
+        // pay attention to the condition in the while loop
         while (l3 || x > 0) {
             int y = l3 ? l3->val : 0;
             int val = (y + x) % 10;
