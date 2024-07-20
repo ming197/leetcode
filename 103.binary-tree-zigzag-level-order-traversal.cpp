@@ -38,7 +38,7 @@ public:
                 if (q.front()->right) {
                     q.push_back(q.front()->right);
                 }
-                q.pop_back();
+                q.pop_front();
             }
             if (delta == -1) {
                 reverse(tmp.begin(), tmp.end());
