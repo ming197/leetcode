@@ -12,11 +12,13 @@ public:
     bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
         unordered_map<int, vector<int>> graph;
         vector<int> indegree(numCourses, 0);
+        // build the graph
         for (auto &p : prerequisites)
         {
             graph[p[1]].push_back(p[0]);
             indegree[p[0]]++;
         }
+        // find the node with 0 indegree
         queue<int> q;
         vector<int> result;
         for (int i = 0; i < numCourses; ++i) {
@@ -25,6 +27,7 @@ public:
                 result.emplace_back(i);
             }
         }
+        // BFS
         while (!q.empty())
         {
             int node = q.front();
