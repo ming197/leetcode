@@ -16,18 +16,17 @@ public:
         return result;
     }
     void DFS(int n, int k, int start) {
-        if (tmp_combation.size() == k) {
+        if (k == 0) {
             result.push_back(tmp_combation);
             return;
         }
-        // pruning, if the number of elements in tmp_combation and the number of elements from start to n is less than k, return
-        if (tmp_combation.size() + n - start + 1 < k) {
-            return;
-        }
+        // i represents the first element of the combination
         // get the combination of k elements from start to n
-        for (int i = start; i <= n; ++i) {
+        // the first element is start, the last element is n - k + 1, which is the last k element
+        // ensure the number of elements is enough
+        for (int i = start; i <= n - k + 1; ++i) {
             tmp_combation.push_back(i);
-            DFS(n, k, i + 1);
+            DFS(n, k - 1, i + 1);
             tmp_combation.pop_back();
         }
     }
