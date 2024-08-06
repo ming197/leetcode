@@ -21,11 +21,11 @@ public:
             return;
         }
         // i represents the first element of the combination
-        // get the combination of k elements from start to n
-        // the first element is start, the last element is n - k + 1, which is the last k element
-        // ensure the number of elements is enough
+        // the largest of the first element is n - k + 1, which ensures that the combination has k elements
         for (int i = start; i <= n - k + 1; ++i) {
             tmp_combation.push_back(i);
+            // the next element of the combination belongs to the range [i + 1, n - (k - 1) + 1]
+            // which ensure there is no duplicate combination and prune the search space
             DFS(n, k - 1, i + 1);
             tmp_combation.pop_back();
         }
