@@ -24,6 +24,7 @@ public:
             return;
         }
         // cannot be duplicated, so start from i
+        // and one element can be used multiple times
         for (int i = start; i < candidates.size(); i++) {
             if (sum + candidates[i] > target) {
                 return;
