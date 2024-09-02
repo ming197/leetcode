@@ -19,6 +19,7 @@ public:
                 result |= mask;
             }
         }
+        return result;
     }
 };
 // @lc code=end
