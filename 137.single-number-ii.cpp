@@ -10,7 +10,7 @@ using namespace std;
 class Solution {
 public:
     int singleNumber(vector<int>& nums) {
-        int result;
+        int result = 0;
         // count the number of 1s in the i-th bit of all numbers
         for (int i = 0; i < 32; i++) {
             int sum = 0;
