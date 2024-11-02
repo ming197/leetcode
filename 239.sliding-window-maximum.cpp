@@ -13,6 +13,7 @@ public:
         if (nums.size() == 0 || k == 0) {
             return {};
         }
+        // the monotonic queue, the front of the queue is the maximum element in the window
         // window: the index of the element in the window
         // the nums in the window is in descending order
         deque<int> window;
