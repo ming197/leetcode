@@ -10,23 +10,28 @@ using namespace std;
 class Solution {
 public:
     vector<int> maxSlidingWindow(vector<int>& nums, int k) {
-        int n = nums.size();
-        // pair: the value and the index of the value
-        // the priority queue is a max heap
-        priority_queue<pair<int, int>> q;
-        for (int i = 0; i < k; ++i) {
-            q.emplace(nums[i], i);
+        if (nums.size() == 0 || k == 0) {
+            return {};
         }
-        vector<int> ans = {q.top().first};
-        for (int i = k; i < n; ++i) {
-            q.emplace(nums[i], i);
-            // pop the value which is out of the window
-            while (q.top().second <= i - k) {
-                q.pop();
+        // window: the index of the element in the window
+        // the nums in the window is in descending order
+        deque<int> window;
+        vector<int> res(nums.size() - k + 1);
+        for (int i = 0; i < nums.size(); ++i) {
+            // remove the element out of the window
+            if (!window.empty() && window.front() == i - k) {
+                window.pop_front();
             }
-            ans.push_back(q.top().first);
+            // remove the element smaller than the current element
+            while (!window.empty() && nums[window.back()] < nums[i]) {
+                window.pop_back();
+            }
+            window.push_back(i);
+            if (i >= k - 1) {
+                res[i - k + 1] = nums[window.front()];
+            }
         }
-        return ans;
+        return res;
     }
 };
 // @lc code=end
