@@ -10,28 +10,24 @@ using namespace std;
 class Solution {
 public:
     int longestConsecutive(vector<int>& nums) {
-        int n = nums.size();
-        if(n == 0){
-            return 0;
+        unordered_set<int> num_set;
+        for (const int &num : nums) {
+            num_set.insert(num);
         }
-        // sort the array
-        sort(nums.begin(), nums.end());
-        int currentConsecutiveSequence = 1;
-        int longestConsecutiveSequence = 0;
-        for(int i=1; i<n; i++){
-            if(nums[i] != nums[i-1]){
-                // check if the current element is consecutive
-                if(nums[i] == nums[i-1] + 1){
-                    currentConsecutiveSequence++;
+        int longest_streak = 0;
+        for (const int &num : nums) {
+            // if the number is the start of a streak and the previous number is not in the set
+            if (num_set.find(num - 1) == num_set.end()) {
+                int current_num = num;
+                int current_streak = 1;
+                while (num_set.find(current_num + 1) != num_set.end()) {
+                    ++current_num;
+                    ++current_streak;
                 }
-                else{
-                    // if not consecutive, update the longestConsecutiveSequence
-                    longestConsecutiveSequence = max(longestConsecutiveSequence, currentConsecutiveSequence);
-                    currentConsecutiveSequence = 1;
-                }
+                longest_streak = max(longest_streak, current_streak);
             }
         }
-        return max(longestConsecutiveSequence, currentConsecutiveSequence);
+        return longest_streak;
     }
 };
 
