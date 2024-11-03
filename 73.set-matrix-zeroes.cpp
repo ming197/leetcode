@@ -10,24 +10,23 @@ using namespace std;
 class Solution {
 public:
     void setZeroes(vector<vector<int>>& matrix) {
-        // O(m+n) space
-        unordered_set<int> rows, cols;
-        for (int i = 0; i < matrix.size(); ++i) {
-            for (int j = 0; j < matrix[0].size(); ++j) {
-                if (matrix[i][j] == 0) {
-                    rows.insert(i);
-                    cols.insert(j);
+        int m = matrix.size();
+        int n = matrix[0].size();
+        // use two vectors to store the row and column that need to be set to 0
+        vector<int> row(m), col(n);
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (!matrix[i][j]) {
+                    row[i] = col[j] = true;
                 }
             }
         }
-        for (const auto& row : rows) {
-            for (int col = 0; col < matrix[0].size(); ++col) {
-                matrix[row][col] = 0;
-            }
-        }
-        for (const auto& col : cols) {
-            for (int row = 0; row < matrix.size(); ++row) {
-                matrix[row][col] = 0;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                // if the row or columns is flagged, set the element to 0
+                if (row[i] || col[j]) {
+                    matrix[i][j] = 0;
+                }
             }
         }
     }
