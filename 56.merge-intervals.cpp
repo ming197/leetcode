@@ -10,25 +10,26 @@ using namespace std;
 class Solution {
 public:
     vector<vector<int>> merge(vector<vector<int>>& intervals) {
-        // sort the intervals based on the start time
-        sort(intervals.begin(), intervals.end(), [](const vector<int>& interval1, const vector<int> interval2){
-            if (interval1[0] != interval2[0]) return interval1[0] < interval2[0];
-            return interval1[1] < interval2[1];
+        vector<vector<int>> merged_intervals;
+        sort(intervals.begin(), intervals.end(), [](const vector<int> &interval1, const vector<int> &interval2) {
+            if (interval1[0] == interval2[0]) {
+                return interval1[1] < interval2[1];
+            }
+            return interval1[0] < interval2[0];
         });
-        vector<vector<int>> merged;
-        int l = intervals[0][0], r = intervals[0][1];
+        int left = intervals[0][0], right = intervals[0][1];
         for (int i = 1; i < intervals.size(); ++i) {
-            int left = intervals[i][0], right = intervals[i][1];
-            if (left <= r) {
-                r = max(r, right);
+            int next_left = intervals[i][0], next_right = intervals[i][1];
+            if (next_left > right) {
+                merged_intervals.push_back({left, right});
+                left = next_left;
+                right = next_right;
             } else {
-                merged.push_back({l, r});
-                l = left;
-                r = right;
+                right = max(right, next_right);
             }
         }
-        merged.push_back({l, r});
-        return merged;
+        merged_intervals.push_back({left, right});
+        return merged_intervals;
     }
 };
 // @lc code=end
