@@ -16,7 +16,7 @@ public:
             res[i] = res[i - 1] * nums[i - 1];
         }
         // use the suffix to store the product of the right side of the element
-        // and multiply it with the res
+        // and multiply it with the prefix product which is stored in res
         for (int i = nums.size() - 1, suffix = 1; i >= 0; i--) {
             res[i] *= suffix;
             suffix *= nums[i];
