@@ -10,20 +10,17 @@ using namespace std;
 class Solution {
 public:
     vector<int> productExceptSelf(vector<int>& nums) {
-        vector<int> res(nums);
-        // prefix product
-        for (int i = 1; i < nums.size(); ++i) {
-            nums[i] *= nums[i - 1];
+        vector<int> res(nums.size(), 1);
+        // use the res to store the product of the left side of the element
+        for (int i = 1; i < nums.size(); i++) {
+            res[i] = res[i - 1] * nums[i - 1];
         }
-        // suffix product
-        for (int i = res.size() - 2; i > -1; --i) {
-            res[i] *= res[i + 1];
+        // use the suffix to store the product of the right side of the element
+        // and multiply it with the res
+        for (int i = nums.size() - 1, suffix = 1; i >= 0; i--) {
+            res[i] *= suffix;
+            suffix *= nums[i];
         }
-        res[0] = res[1];
-        for (int i = 1; i < res.size() - 1; ++i) {
-            res[i] = nums[i - 1] * res[i + 1];
-        }
-        res[res.size() - 1] = nums[res.size() - 2];
         return res;
     }
 };
