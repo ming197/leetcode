@@ -10,54 +10,28 @@ using namespace std;
 class Solution {
 public:
     vector<int> spiralOrder(vector<vector<int>>& matrix) {
+        vector<int> delta_row{0, 1, 0, -1};
+        vector<int> delta_col{1, 0, -1, 0};
         int m = matrix.size();
         int n = matrix[0].size();
-        vector<vector<bool>> passed(m, vector<bool>(n, false));
-        int i = 0, j = 0;
+        // we can update the element in the matrix to an invalid value to avoid using extra space
+        vector<vector<bool>> flag(m, vector<bool>(n, false));
+        int step = 0;
+        int row = 0, col = 0;
+        int direction = 0;
         vector<int> res;
-        res.emplace_back(matrix[i][j]);
-        passed[i][j] = true;
-        int count  = m * n;
-        // check if the matrix is 1x1
-        while (res.size() < count)
-        {
-            // right
-            while (j + 1 < n && !passed[i][j + 1])
-            {
-                j++;
-                res.emplace_back(matrix[i][j]);
-                passed[i][j] = true;
-                if (res.size() == count)
-                    return res;
+        while (step++ < m * n) {
+            // update result and flag
+            res.emplace_back(matrix[row][col]);
+            flag[row][col] = true;
+            // find the next valid step 
+            int next_row = row + delta_row[direction];
+            int next_col = col + delta_col[direction];
+            if (next_row < 0 || next_row > m - 1 || next_col < 0 || next_col > n - 1 || flag[next_row][next_col]) {
+                direction = (direction + 1) % 4;
             }
-            // down
-            while (i + 1 < m && !passed[i + 1][j])
-            {
-                i++;
-                res.emplace_back(matrix[i][j]);
-                passed[i][j] = true;
-                if (res.size() == count)
-                    return res;
-            }
-            // left
-            while (j - 1 >= 0 && !passed[i][j - 1])
-            {
-                j--;
-                res.emplace_back(matrix[i][j]);
-                passed[i][j] = true;
-                if (res.size() == count)
-                    return res;
-            }
-            // up
-            while (i - 1 >= 0 && !passed[i - 1][j])
-            {
-                i--;
-                res.emplace_back(matrix[i][j]);
-                passed[i][j] = true;
-                if (res.size() == count)
-                    return res;
-            }
-            
+            row += delta_row[direction];
+            col += delta_col[direction];
         }
         return res;
     }
