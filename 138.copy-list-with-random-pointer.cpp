@@ -26,41 +26,26 @@ public:
 class Solution {
 public:
     Node* copyRandomList(Node* head) {
-        Node* dummy_head = new Node(0);
-        dummy_head->next = head;
-        // copy the node
-        // and insert the new node after the original node
-        while (head)
-        {
-            Node* new_node = new Node(head->val);
-            new_node->next = head->next;
-            head->next = new_node;
-            head = new_node->next;
+        if (!head) return nullptr;
+        unordered_map<Node*, Node*> old2new;
+        Node *node = head;
+        while (node) {
+            old2new[node] = new Node(node->val);
+            node = node->next;
         }
-        head = dummy_head->next;
-        // update the copied node's random pointer
-        while (head)
-        {
-            if (head->random)
+        node = head;
+        while (node) {
+            if (node->next)
             {
-                head->next->random = head->random->next;
+                old2new[node]->next = old2new[node->next];
             }
-            head = head->next->next;
+            if (node->random)
+            {
+                old2new[node]->random = old2new[node->random];
+            }
+            node = node->next;
         }
-        // separate the copied node from the original node
-        // recover the original node's next pointer
-        Node* previous_ptr = dummy_head;
-        while (previous_ptr->next)
-        {
-            Node* original_node = previous_ptr->next;
-            Node* copied_node = original_node->next;
-            // 1. recover the original node's next pointer
-            original_node->next = copied_node->next;
-            // 2. update copied node's next pointer
-            previous_ptr->next = copied_node;
-            previous_ptr = copied_node;
-        }
-        return dummy_head->next;
+        return old2new[head];
     }
 };
 
