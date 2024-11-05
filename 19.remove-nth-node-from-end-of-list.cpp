@@ -22,51 +22,23 @@ struct ListNode {
       ListNode(int x) : val(x), next(nullptr) {}
       ListNode(int x, ListNode *next) : val(x), next(next) {}
  };
-class Solution {
-public:
-    ListNode* removeNthFromEnd(ListNode* head, int n) {
-        ListNode *dummy_head = new ListNode(0, head);
-        ListNode *previous_node = dummy_head;
-        int length = 0;
-        while (previous_node->next != nullptr)
-        {
-            previous_node = previous_node->next;
-            length++;
-        }
-        previous_node = dummy_head;
-        int index = 0;
-        // find the node to be removed
-        while (index < length - n) {
-            previous_node = previous_node->next;
-            index++;
-        }
-        previous_node->next = previous_node->next->next;
-        return dummy_head->next;
-    }
-};
 // two pointers
 class Solution {
 public:
     ListNode* removeNthFromEnd(ListNode* head, int n) {
-        ListNode* dummy = new ListNode(0);
-        dummy->next = head;
-        ListNode* first = dummy;
-        ListNode* second = dummy;
-
-        for (int i = 0; i <= n; ++i) {
-            first = first->next;
+        ListNode *dummy_head = new ListNode(-1, head);
+        ListNode *slow = dummy_head, *fast = dummy_head;
+        for (int i = 0; i < n; i++)
+        {
+            fast = fast->next;
         }
-
-        while (first != nullptr) {
-            first = first->next;
-            second = second->next;
+        while (fast->next)
+        {
+            slow = slow->next;
+            fast = fast->next;
         }
-
-        ListNode* temp = second->next;
-        second->next = second->next->next;
-        delete temp;
-
-        return dummy->next;
+        slow->next = slow->next->next;
+        return dummy_head->next;
     }
 };
 // @lc code=end
