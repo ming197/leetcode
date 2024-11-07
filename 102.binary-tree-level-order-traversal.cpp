@@ -18,29 +18,30 @@ using namespace std;
 class Solution {
 public:
     vector<vector<int>> levelOrder(TreeNode* root) {
-        vector<vector<int>> result;
-        if (!root) {
-            return result;
-        }
-        queue<TreeNode*> q;
-        q.push(root);
-        while (!q.empty())
-        {
+        vector<vector<int>> res;
+        if (!root) return res;
+        deque<TreeNode*> q;
+        q.push_back(root);
+        while (!q.empty()) {
             int size = q.size();
-            vector<int> tmp;
+            // initialize the size
+            vector<int> level(size, 0);
+            // iterate the level
             for (int i = 0; i < size; ++i) {
-                tmp.push_back(q.front()->val);
-                if (q.front()->left) {
-                    q.push(q.front()->left);
+                auto *node = q.front();
+                if (node->left) {
+                    q.push_back(node->left);
                 }
-                if (q.front()->right) {
-                    q.push(q.front()->right);
+                if (node->right)
+                {
+                    q.push_back(node->right);
                 }
-                q.pop();
+                level[i] = node->val;
+                q.pop_front();
             }
-            result.push_back(tmp);
+            res.emplace_back(level);
         }
-        return result;
+        return res;
     }
 };
 // @lc code=end
