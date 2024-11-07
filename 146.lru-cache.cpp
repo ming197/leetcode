@@ -10,81 +10,79 @@ using namespace std;
 class LRUCache {
 public:
     struct ListNode {
-        int key;
-        int value;
-        ListNode *prev;
-        ListNode *next;
-        ListNode(int key, int value) : key(key), value(value), prev(nullptr), next(nullptr) {}
+        // key is used to find the node in the hash table
+        // when we need to remove the least recently used item
+        int key_;
+        int value_;
+        ListNode *prev_, *next_;
+        ListNode(int key, int value) : key_(key), value_(value), prev_(this), next_(this) {}
     };
     // 1. need to get in O(1) time, so we need to use hash table
-    // 2. put in O(1) time, so we need to use double linked list
-    //  a. add the node to the head in O(1) time
-    //  b. remove the tail in O(1) time
-    unordered_map<int, ListNode*> cache_node_;
-    ListNode *dummy_head_;
-    int capacity_;
+    // 2. need to remove the least recently used item in O(1) time, so we need to use double linked list
+    //   a. remove the tail node in O(1) time
+    //   b. add a new node to the head in O(1) time
+    unordered_map<int, ListNode*> cache_;
+    ListNode *dummy_head_ = new ListNode(-1, -1);
     int size_;
+    int capacity_;
     LRUCache(int capacity) {
-        dummy_head_ = new ListNode(-1, -1);
-        dummy_head_->prev = dummy_head_;
-        dummy_head_->next = dummy_head_;
-        capacity_ = capacity;
         size_ = 0;
-        cache_node_.clear();
+        capacity_ = capacity;
+        cache_.clear();
     }
     
     int get(int key) {
-        if (cache_node_.find(key) == cache_node_.end()) {
-            return -1;
-        }
-        ListNode *node = cache_node_[key];
-        // update the node to the head
+        auto iter = cache_.find(key);
+        if (iter == cache_.end()) return -1;
+        ListNode *node = iter->second;
         moveToHead(node);
-        return node->value;
+        return node->value_;
     }
     
     void put(int key, int value) {
-        if (cache_node_.find(key) != cache_node_.end()) {
-            // update the value of the node
-            cache_node_[key]->value = value;
-            // update the node to the head
-            moveToHead(cache_node_[key]);
-            return;
-        } else {
+        auto iter = cache_.find(key);
+        if (iter == cache_.end()) {
             ListNode *node = new ListNode(key, value);
+            cache_[key] = node;
             addNode(node);
-            cache_node_[key] = node;
             size_++;
             if (size_ > capacity_) {
+                // remove the least recently used item
+                // 1. remove the tail node from the list
+                // 2. remove the tail node in the hash table
+                cache_.erase(dummy_head_->prev_->key_);
                 removeTail();
                 size_--;
             }
+        } else {
+            iter->second->value_ = value;
+            moveToHead(iter->second);
         }
     }
 
     void addNode(ListNode *node) {
-        node->prev = dummy_head_;
-        node->next = dummy_head_->next;
-        dummy_head_->next->prev = node;
-        dummy_head_->next = node;
+        // intialize the node's next and prev
+        node->next_ = dummy_head_->next_;
+        node->prev_ = dummy_head_;
+        // update the dummy head's next and next's prev
+        dummy_head_->next_->prev_ = node;
+        dummy_head_->next_ = node;
+    }
+
+    void removeNode(ListNode *node) {
+        node->prev_->next_ = node->next_;
+        node->next_->prev_ = node->prev_;
     }
 
     void moveToHead(ListNode *node) {
-        node->prev->next = node->next;
-        node->next->prev = node->prev;
-        node->prev = dummy_head_;
-        node->next = dummy_head_->next;
-        dummy_head_->next->prev = node;
-        dummy_head_->next = node;
+        // remove the node from the list
+        removeNode(node);
+        // add the node to the head
+        addNode(node);
     }
 
     void removeTail() {
-        // tail cannot be dummy_head_
-        ListNode *tail = dummy_head_->prev;
-        tail->prev->next = dummy_head_;
-        dummy_head_->prev = tail->prev;
-        cache_node_.erase(tail->key);
-        delete tail;
+        removeNode(dummy_head_->prev_);
     }
 };
 
