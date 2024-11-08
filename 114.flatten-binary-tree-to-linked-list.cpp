@@ -13,10 +13,27 @@ struct TreeNode {
     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
  };
+ #include "bits/stdc++.h"
+ using namespace std;
 class Solution {
 public:
     void flatten(TreeNode* root) {
-        DFS(root);
+        if (!root) return;
+        stack<TreeNode*> stk;
+        TreeNode *dummy_head = new TreeNode(-1);
+        auto prev = dummy_head;
+        stk.push(root);
+        while (!stk.empty())
+        {
+            auto *node = stk.top();
+            stk.pop();
+            prev->right = node;
+            prev->left = nullptr;
+            prev = node;
+            if (node->right) stk.push(node->right);
+            if (node->left) stk.push(node->left);
+        }
+        delete dummy_head;
     }
     // return the last node of the flatten tree
     TreeNode* DFS(TreeNode* root) {
