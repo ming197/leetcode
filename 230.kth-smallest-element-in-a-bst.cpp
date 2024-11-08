@@ -29,31 +29,26 @@ struct TreeNode {
 using namespace std;
 class Solution {
 public:
-    // use stk to store the path from root to the leftmost node
-    stack<TreeNode*> stk;
     int kthSmallest(TreeNode* root, int k) {
-        initialize(root);
-        int res;
-        while (k > 0) {
-            res = getNext();
-            k--;
+        TreeNode *cur = root;
+        stack<TreeNode*> stk;
+        while (cur || !stk.empty()){
+            // go to the leftmost node
+            while (cur){
+                stk.push(cur);
+                cur = cur->left;
+            }
+
+            // pop the leftmost node
+            cur = stk.top();
+            stk.pop();
+            // if k is 1, return the value
+            if (--k == 0) return cur->val;
+
+            // go to the right node
+            cur = cur->right;
         }
-        return res;
-    }
-    void partialInorder(TreeNode* root){
-        while(root != nullptr){
-            stk.push(root);
-            root = root->left;
-        }
-    }
-    void initialize(TreeNode* root) {
-        partialInorder(root);
-    }
-    int getNext() {
-        TreeNode* node = stk.top();
-        stk.pop();
-        partialInorder(node->right);
-        return node->val;
+        return -1;
     }
 };
 // @lc code=end
