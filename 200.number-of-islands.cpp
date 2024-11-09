@@ -12,7 +12,8 @@ public:
     vector<int> delta_x = {0, 0, 1, -1};
     vector<int> delta_y = {1, -1, 0, 0};
     void dfs(vector<vector<char>>& grid, int x, int y) {
-        grid[x][y] = '0';
+        // mark the current cell as visited
+        grid[x][y] = '2';
         for (int i = 0; i < 4; i++) {
             int new_x = x + delta_x[i];
             int new_y = y + delta_y[i];
