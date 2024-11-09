@@ -9,59 +9,62 @@
 using namespace std;
 class Trie {
 public:
-    struct Node {
-        bool isEnd;
-        // maybe no use
-        char val;
-        Node* children[26];
-        Node() {
-            isEnd = false;
-            memset(children, 0, sizeof(children));
-        }
+    struct Node
+    {
+        char val_;
+        bool isLast_ = false;
+        vector<Node*> children_;
+        Node(char val) : val_(val), children_(26, nullptr) {}
     };
-    Node* root;
+    Node *root = new Node('\0');
     Trie() {
-        root = new Node();
+        
     }
     
     void insert(string word) {
-        Node* curr = root;
-        // insert each character of the word
-        for (int i = 0; i < word.size(); ++i) {
-            if (curr->children[word[i] - 'a'] == nullptr) {
-                curr->children[word[i] - 'a'] = new Node();
-                curr->children[word[i] - 'a']->val = word[i];
+        Node *node = root;
+        for (int i = 0; i < word.size(); ++i)
+        {
+            auto ch = word[i];
+            // if the current character is not in the children, create a new node
+            if (!node->children_[ch - 'a'])
+            {
+                node->children_[ch - 'a'] = new Node(ch);
             }
-            // if it is the last character of the word
+            node = node->children_[ch - 'a'];
             if (i == word.size() - 1) {
-                curr->children[word[i] - 'a']->isEnd = true;
+                node->isLast_ = true;
             }
-            curr = curr->children[word[i] - 'a'];
         }
     }
     
     bool search(string word) {
-        Node *curr = root;
-        for (int i = 0; i < word.size(); ++i) {
-            if (curr->children[word[i] - 'a'] == nullptr) {
+        Node *node = root;
+        for (char ch : word) {
+            if (node->children_[ch - 'a'])
+            {
+                node = node->children_[ch - 'a'];
+            }
+            else
+            {
                 return false;
             }
-            // if it is the last character of the word
-            if (i == word.size() - 1 && curr->children[word[i] - 'a']->isEnd) {
-                return true;
-            }
-            curr = curr->children[word[i] - 'a'];
         }
+        if (node->isLast_) return true;
         return false;
     }
     
     bool startsWith(string prefix) {
-        Node *curr = root;
-        for (int i = 0; i < prefix.size(); ++i) {
-            if (curr->children[prefix[i] - 'a'] == nullptr) {
+        Node *node = root;
+        for (char ch : prefix) {
+            if (node->children_[ch - 'a'])
+            {
+                node = node->children_[ch - 'a'];
+            }
+            else
+            {
                 return false;
             }
-            curr = curr->children[prefix[i] - 'a'];
         }
         return true;
     }
