@@ -20,6 +20,7 @@ public:
             else right = mid;
         }
         res[0] = nums[left] == target ? left : -1;
+        if (res[0] == -1) return res;
         right = nums.size() - 1;
         // find right bound
         while (left < right)
@@ -28,7 +29,7 @@ public:
             if (nums[mid] > target) right = mid - 1;
             else left = mid;
         }
-        res[1] = nums[right] == target ? right : -1;
+        res[1] = right;
         return res;
     }
 };
