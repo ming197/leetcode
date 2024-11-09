@@ -10,34 +10,31 @@ using namespace std;
 class Solution {
 public:
     vector<string> result;
-    string tmp;
     vector<string> generateParenthesis(int n) {
-        DFS(n, 0, 0);
+        string temp_str("");
+        backtrack(n, 0, 0, temp_str);
         return result;
     }
-    void DFS(int n, int left, int right) {
-        if (left == n && right == n) {
-            result.push_back(tmp);
+
+    void backtrack(int n, int left, int right, string &temp_str)
+    {
+        if (temp_str.size() == 2 * n)
+        {
+            result.push_back(temp_str);
             return;
         }
-        // Recursive branch
-        if (left == right) {
-            tmp.push_back('(');
-            DFS(n, left + 1, right);
-            tmp.pop_back();
-        } else if (left > right) {
-            // step1: add '('
-            if (left < n) {
-                tmp.push_back('(');
-                DFS(n, left + 1, right);
-                tmp.pop_back();
-            }
-            // step2: add ')'
-            tmp.push_back(')');
-            DFS(n, left, right + 1);
-            tmp.pop_back();
+        if (left < n)
+        {
+            temp_str.push_back('(');
+            backtrack(n, left + 1, right, temp_str);
+            temp_str.pop_back();
         }
-
+        if (right < left)
+        {
+            temp_str.push_back(')');
+            backtrack(n, left, right + 1, temp_str);
+            temp_str.pop_back();
+        }
     }
 };
 // @lc code=end
