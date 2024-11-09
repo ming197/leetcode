@@ -9,8 +9,6 @@
 using namespace std;
 class Solution {
 public:
-    vector<string> result;
-    string tmp_str = "";
     unordered_map<char, string> digit2string = {
         {'2', "abc"},
         {'3', "def"},
@@ -21,23 +19,26 @@ public:
         {'8', "tuv"},
         {'9', "wxyz"}
     };
+    vector<string> result;
     vector<string> letterCombinations(string digits) {
-        // edge case
-        if (digits.size() == 0) return result;
-        DFS(digits, 0);
+        if(digits.size() == 0) return result;
+        string temp("");
+        backtrack(digits, 0, temp);
         return result;
     }
-    void DFS(string &digits, int index) {
-        if (index == digits.size()) {
-            result.push_back(tmp_str);
+
+    void backtrack(string &digits, int k, string &temp) {
+        if (temp.size() == digits.size()) {
+            result.push_back(temp);
             return;
         }
-        for (char c : digit2string[digits[index]]) {
-            tmp_str.push_back(c);
-            DFS(digits, index + 1);
-            tmp_str.pop_back();
+        for (char c : digit2string[digits[k]]) {
+            temp.push_back(c);
+            backtrack(digits, k + 1, temp);
+            temp.pop_back();
         }
     }
+
 };
 // @lc code=end
 
