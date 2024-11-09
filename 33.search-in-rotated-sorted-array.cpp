@@ -10,41 +10,56 @@ using namespace std;
 class Solution {
 public:
     int search(std::vector<int>& nums, int target) {
-        int low = 0, high = nums.size() - 1;
-
-        while (low <= high) {
-            int mid = (low + high) / 2;
-
-            if (nums[mid] == target) {
+        int l = 0, r = nums.size() - 1;
+        while (l < r)
+        {
+            int mid = l + (r - l) / 2;
+            if (nums[mid] == target)
+            {
                 return mid;
             }
 
-            if (nums[low] <= nums[mid]) {
-                if (nums[low] <= target && target < nums[mid]) {
-                    high = mid - 1;
-                } else {
-                    low = mid + 1;
+            if (nums[mid] > nums[r])
+            {
+                if (target > nums[mid])
+                {
+                    l = mid + 1;
                 }
-            } else {
-                if (nums[mid] < target && target <= nums[high]) {
-                    low = mid + 1;
-                } else {
-                    high = mid - 1;
+                else
+                {
+                    if (target >= nums[l])
+                    {
+                        r = mid;
+                    }
+                    else
+                    {
+                        l = mid + 1;
+                    }
+                }
+            }
+            else // nums[mid] < nums[r]
+            {
+                if (target > nums[mid])
+                {
+                    if (target <= nums[r])
+                    {
+                        l = mid + 1;
+                    }
+                    else
+                    {
+                        r = mid;
+                    }
+                }
+                else
+                {
+                    r = mid;
                 }
             }
         }
-
-        return -1;
+        return nums[l] == target ? l : -1;
     }
 };
 
 
-int main() {
-    Solution s;
-    vector<int> nums = {5,1,3};
-    int target = 3;
-    cout << s.search(nums, target) << endl;
-    return 0;
-}
 // @lc code=end
 
