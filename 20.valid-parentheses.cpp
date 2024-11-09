@@ -14,30 +14,24 @@ public:
         if (n % 2 == 1) {
             return false;
         }
-        stack<char> stk;
-        for (int i = 0; i < n; ++i) {
-            if (s[i] == '(' || s[i] == '[' || s[i] == '{') {
-                stk.push(s[i]);
+        deque<char> stk;
+        for (char ch : s) {
+            if (ch == '(' || ch == '[' || ch == '{') {
+                stk.push_front(ch);
             } else {
-                switch (s[i])
-                {
-                    case ')':
-                        if (stk.empty() || stk.top() != '(') {
-                            return false;
-                        }
-                        break;
-                    case ']':
-                        if (stk.empty() || stk.top() != '[') {
-                            return false;
-                        }
-                        break;
-                    case '}':
-                        if (stk.empty() || stk.top() != '{') {
-                            return false;
-                        }
-                        break;
+                if (stk.empty()) {
+                    return false;
                 }
-                stk.pop();
+                if (ch == ')' && stk.front() != '(') {
+                    return false;
+                }
+                if (ch == ']' && stk.front() != '[') {
+                    return false;
+                }
+                if (ch == '}' && stk.front() != '{') {
+                    return false;
+                }
+                stk.pop_front();
             }
         }
         return stk.empty();
