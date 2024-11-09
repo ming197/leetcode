@@ -10,39 +10,35 @@ using namespace std;
 class Solution {
 public:
     bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
-        unordered_map<int, vector<int>> graph;
         vector<int> indegree(numCourses, 0);
-        // build the graph
-        for (auto &p : prerequisites)
-        {
-            graph[p[1]].push_back(p[0]);
+        // graph: key is the prerequisite course, value is the course that depends on the key
+        // the graph is represented by an adjacency list
+        // it is a sparse graph, so we use unordered_map to store the graph
+        unordered_map<int, vector<int>> graph;
+        for (auto &p : prerequisites) {
             indegree[p[0]]++;
-        }
-        // find the node with 0 indegree
-        queue<int> q;
-        vector<int> result;
-        for (int i = 0; i < numCourses; ++i) {
-            if (indegree[i] == 0) {
-                q.emplace(i);
-                result.emplace_back(i);
-            }
+            graph[p[1]].push_back(p[0]);
         }
         // BFS
-        while (!q.empty())
-        {
-            int node = q.front();
-            q.pop();
-            for (auto &neighbor : graph[node])
-            {
-                indegree[neighbor]--;
-                if (indegree[neighbor] == 0)
-                {
-                    q.push(neighbor);
-                    result.emplace_back(neighbor);
+        deque<int> q;
+        for (int i = 0; i < numCourses; ++i) {
+            if (indegree[i] == 0) {
+                q.push_back(i);
+            }
+        }
+        int cnt = q.size();
+        while (!q.empty()) {
+            int course = q.front();
+            q.pop_front();
+            for (auto &c : graph[course]) {
+                indegree[c]--;
+                if (indegree[c] == 0) {
+                    q.push_back(c);
+                    cnt++;
                 }
             }
         }
-        return result.size() == numCourses;
+        return cnt == numCourses;
     }
 };
 // @lc code=end
