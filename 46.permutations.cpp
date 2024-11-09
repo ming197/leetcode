@@ -9,28 +9,23 @@
 using namespace std;
 class Solution {
 public:
-    unordered_set<int> visited;
-    vector<vector<int>> result;
-    vector<int> tmp;
     vector<vector<int>> permute(vector<int>& nums) {
-        // sort(nums.begin(), nums.end());
-        DFS(nums);
-        return result;
+        dfs(nums, 0);
+        return res;
     }
-    void DFS(vector<int> &nums) {
-        if (tmp.size() == nums.size()) {
-            result.push_back(tmp);
+private:
+    vector<vector<int>> res;
+    // x is the index of the current element
+    // the elements before x are fixed
+    void dfs(vector<int> nums, int x) {
+        if (x == nums.size() - 1) {
+            res.push_back(nums);
             return;
         }
-        for (int x : nums) {
-            if (visited.find(x) != visited.end()) {
-                continue;
-            }
-            visited.insert(x);
-            tmp.push_back(x);
-            DFS(nums);
-            tmp.pop_back();
-            visited.erase(x);
+        for (int i = x; i < nums.size(); i++) {
+            swap(nums[i], nums[x]);
+            dfs(nums, x + 1);   
+            swap(nums[i], nums[x]);
         }
     }
 };
