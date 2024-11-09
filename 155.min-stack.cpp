@@ -9,25 +9,35 @@
 using namespace std;
 class MinStack {
 public:
-    // pair<int,int> first element is the value and second element is the minimum value till now
-    vector<pair<int,int>> stk;
-	
-    MinStack() { }
-    
-    void push(int val) {
-        if(stk.empty())
-            stk.push_back({val, val});
-        else
-            // if the current value is less than the minimum value till now 
-            // then update the minimum value
-            stk.push_back({val, min(stk.back().second,val)});    
+    // pair<int, int> first: val, second: min
+    // the second element of the pair is the min value to the current element
+    deque<pair<int, int>> min_stk_;
+    MinStack() {
+        
     }
     
-    void pop() { stk.pop_back(); }
+    void push(int val) {
+        if (min_stk_.empty())
+        {
+            min_stk_.push_front({val, val});
+        }
+        else
+        {
+            min_stk_.push_front({val, min(val, min_stk_.front().second)});
+        }
+    }
     
-    int top() { return stk.back().first; }
+    void pop() {
+        min_stk_.pop_front();
+    }
     
-    int getMin() { return stk.back().second; }
+    int top() {
+        return min_stk_.front().first;
+    }
+    
+    int getMin() {
+        return min_stk_.front().second;
+    }
 };
 
 /**
