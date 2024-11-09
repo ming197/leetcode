@@ -10,30 +10,25 @@ using namespace std;
 class Solution {
 public:
     vector<vector<int>> result;
-    vector<int> tmp;
-    int sum = 0;
+
     vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
         sort(candidates.begin(), candidates.end());
-        DFS(candidates, target);
+        vector<int> temp;
+        backtrack(candidates, target, 0, 0, temp);
         return result;
     }
 
-    void DFS(vector<int>& candidates, int target, int start = 0) {
+    void backtrack(vector<int> &candidates, int target, int start, int sum, vector<int> &temp) {
         if (sum == target) {
-            result.push_back(tmp);
+            result.push_back(temp);
             return;
         }
-        // cannot be duplicated, so start from i
-        // and one element can be used multiple times
         for (int i = start; i < candidates.size(); i++) {
-            if (sum + candidates[i] > target) {
-                return;
-            }
-            sum += candidates[i];
-            tmp.push_back(candidates[i]);
-            DFS(candidates, target, i);
-            sum -= candidates[i];
-            tmp.pop_back();
+            // if the sum is greater than the target, break
+            if (sum + candidates[i] > target) break;
+            temp.push_back(candidates[i]);
+            backtrack(candidates, target, i, sum + candidates[i], temp);
+            temp.pop_back();
         }
     }
 };
