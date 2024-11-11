@@ -10,20 +10,23 @@ using namespace std;
 class Solution {
 public:
     int jump(vector<int>& nums) {
-        int len = nums.size();
-        // min step to i from 0
-        vector<int> minSteps(len, 10010);
-        minSteps[0] = 0;
-        for (int i = 0; i < len; ++i) {
-            int maxIndex = min(i + nums[i] + 1, len); 
-            for (int j = i + 1; j < maxIndex; ++j) {
-                minSteps[j] = min(minSteps[i] + 1, minSteps[j]);
-                if (j == len - 1) {
-                    return minSteps[j];
-                }
+        int n = nums.size();
+        // max_reachable is the farthest index that can be reached
+        // last_reachable is the last index that can be reached
+        int max_reachable = 0;
+        int last_reachable = 0;
+        int jumps = 0;
+        for (int i = 0; i < n - 1; i++)
+        {
+            max_reachable = max(max_reachable, i + nums[i]);
+            // If the current index is the last reachable index, then update the last reachable index and increment the number of jumps
+            if (i == last_reachable)
+            {
+                last_reachable = max_reachable;
+                jumps++;
             }
         }
-        return minSteps[len - 1];
+        return jumps;
     }
 };
 // @lc code=end
