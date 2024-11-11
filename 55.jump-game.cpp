@@ -10,16 +10,21 @@ using namespace std;
 class Solution {
 public:
     bool canJump(vector<int>& nums) {
-        // max index it can jump from i
-        vector<int> maxIndex(nums.size(), 0);
-        maxIndex[0] = nums[0];
-        for (int i = 1; i < nums.size(); ++i) {
-            maxIndex[i] = max(maxIndex[i - 1], nums[i - 1] + i - 1);
-            if (maxIndex[i] < nums.size() - 1 && maxIndex[i] <= i - 1) {
+        int n = nums.size();
+        int max_reachable = 0;
+        for (int i = 0; i < n; i++)
+        {
+            if (i > max_reachable)
+            {
                 return false;
             }
+            max_reachable = max(max_reachable, i + nums[i]);
+            if (max_reachable >= n - 1)
+            {
+                return true;
+            }
         }
-        return true;
+        return false;
     }
 };
 // @lc code=end
