@@ -12,7 +12,6 @@ public:
     vector<vector<int>> generate(int numRows) {
         if (numRows == 1) return {{1}};
         vector<vector<int>> res{{1}};
-        // res.push_back({1});
         for (int row = 1; row < numRows; ++row) {
             vector<int> nextRow{1};
             for (int col = 1; col < row; ++col) {
