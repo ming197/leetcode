@@ -11,19 +11,24 @@ class Solution {
 public:
     bool wordBreak(string s, vector<string>& wordDict) {
         unordered_set<string> dict(wordDict.begin(), wordDict.end());
+
         int n = s.size();
-        vector<bool> dp(n, false);
-        for (int i = 0; i < n; ++i) {
-            // judge substring [0, i] of s can be segmented
-            for (int prefix_len = 0; prefix_len < i + 1 && !dp[i]; ++prefix_len) {
-                if (prefix_len == 0) {
-                    dp[i] = dict.count(s.substr(0, i + 1));
-                } else {
-                    dp[i] = dp[prefix_len - 1] && dict.count(s.substr(prefix_len, i - prefix_len + 1));
+        // f[i] = f[j] && dict.find(s.substr(j, i - j)) != dict.end()
+        // it means that s[0, j) is breakable and s[j, i) is in the dict]
+        vector<bool> f(n + 1, false);
+        f[0] = true;
+        for (int i = 1; i <= n; ++i)
+        {
+            for (int j = 0; j < i; ++j)
+            {
+                if (f[j] && dict.find(s.substr(j, i - j)) != dict.end())
+                {
+                    f[i] = true;
+                    break;
                 }
             }
         }
-        return dp[n - 1];
+        return f[s.size()];
     }
 };
 // @lc code=end
