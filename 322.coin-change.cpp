@@ -26,5 +26,24 @@ public:
         return minCoins[amount] != amount + 1 ? minCoins[amount] : -1;        
     }
 };
+
+class Solution {
+public:
+    int coinChange(vector<int>& coins, int amount) {
+        // f[i] = min(f[i - coins[j]]) + 1
+        // intitialize to amount + 1 to avoid overflow
+        vector<int> f(amount + 1, amount + 1);
+        f[0] = 0;
+        for (int i = 1; i <= amount; ++i) {
+            for (int j = 0; j < coins.size(); ++j) {
+                if (coins[j] <= i)
+                {
+                    f[i] = min(f[i], 1 + f[i - coins[i]]);
+                }
+            }
+        }
+        return f[amount] != amount + 1 ? f[amount] : -1;
+    }
+};
 // @lc code=end
 
