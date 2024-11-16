@@ -10,7 +10,6 @@
 #include <algorithm>
 using namespace std;
 class Solution {
-class Solution {
 public:
     bool canPartition(vector<int>& nums) {
         int n = nums.size();
