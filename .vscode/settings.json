@@ -4,6 +4,8 @@
         "string": "cpp",
         "deque": "cpp",
         "unordered_map": "cpp",
-        "__node_handle": "cpp"
+        "__node_handle": "cpp",
+        "complex": "cpp",
+        "valarray": "cpp"
     }
 }
